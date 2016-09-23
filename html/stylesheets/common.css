@@ -1,312 +1,237 @@
+/*=======================================*/
+/* Reset everything to baseline defaults */
+/*=======================================*/
+@import url("clear.css");
 
-/***************** common to all pages, moved to this stylesheet ********************/
 
-/* default font size for all elements */
-* {font-size:8pt;}
-
+/*=======================================*/
+/* Now set the defaults we want          */
+/*=======================================*/
+html,body { height: 100%; width: 100%; }
 body {
-	font-family: verdana,arial,serif;
-	font-weight: normal;
-	}
-
-/* most other link color scheme blue/light blue */
-a:link,a:visited {
-  text-decoration: none;
-  color: #40529b; /* blue */
-  /* color: #DEE7C6; pale yellow */ 
+	border:				0 none;
+	padding:			0;
+	background:			#fdfdfd;
+	color:				#333;
+	vertical-align:		baseline;
+	tabindex:			-1;
+	text-decoration:	none;
 }
-a:hover,a:active {
-  text-decoration: underline;
-  /* color: #3f5bcd; gold */
-  color: #8391cd;      /*dark blue */
-  /*color: #8391cd; */
+html,body,form,fieldset { font: 11px/140% Tahoma,Arial,"DejaVu Sans",Helvetica,sans-serif; }
+a { color: #40529b; }
+a:hover { text-decoration: underline; color: #33c5d8; }
+input,select,textarea
+	{ font: 100% Tahoma,Arial,"DejaVu Sans",Helvetica,sans-serif; }
+b { font-weight: bold; }
+i { font-style: italic; }
+em { font-weight: bold; font-style: italic; }
+u { text-decoration: underline; }
+tt { font: 9pt "Andale Mono","DejaVu Sans Mono",Consolas,"Courier New",Courier,monospace; }
+
+/*hr { display:block; height:1px; border-top:1px solid #666; margin:2px auto; }*/
+hr { display:block; height:1px; border:0; background-color:#666; margin:2px auto; }
+li,dd,blockquote { margin-left: 1em; }
+td { padding: 2px; }
+
+/*=======================================*/
+/* Buttons                               */
+/*=======================================*/
+button {
+	_font-weight:		bold;
+	_color:				white;
+	_background-color:	#f24800;
+	_width:				1px;
+	_padding:			0px 10px;
+	_overflow:			visible;
+}
+button, input[type=submit], input[type=submit], input[type=reset], input[type=button] {
+	font-weight: bold;
+	color: white;
+	border: 1px solid #d22800;
+	background-color: #f24800;
+	padding: 0px 10px;
+	*padding: 0px 0px;
+	margin: 0;
+	line-height: 150%;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-opera-border-radius: 5px;
+	border-radius: 5px;
+}
+button, input[type=reset] { background-color: white; color: black; border: 1px solid #666; }
+button:hover, input[type=submit]:hover, input[type=button]:hover
+	{ background-color: #e23800; }
+button, input[type=reset]:hover { background-color: #ddd; color: black; }
+button:active, input[type=submit]:active, input[type=reset]:active, input[type=button]:active
+	{ margin: 1px 0 0 1px; }
+button.SmallBtn, input[type=submit].SmallBtn, input[type=reset].SmallBtn, input[type=button].SmallBtn
+	{ line-height: 120%; }
+button.BigBtn, input[type=submit].BigBtn, input[type=reset].BigBtn, input[type=button].BigBtn
+	{ line-height: 200%; padding: 0px 20px; }
+button.MaxWBtn, input[type=submit].MaxWBtn, input[type=reset].MaxWBtn, input[type=button].MaxWBtn
+	{ width: 100%; }
+button[disabled], input[type=submit][disabled], input[type=reset][disabled], input[type=button][disabled] {
+	font-style: normal; font-weight: 100;
+	-moz-opacity: 0.50;	opacity: .50;	filter: alpha(opacity=50);
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 }
 
-table {border-collapse:collapse;}
-th {  font-size: 10pt;  text-align: left;  background-color: #999797;  }
-
-.infoBox { border: 1px solid #AAA;  padding: 2px; font-size:8pt; margin-bottom:3px;}
-.linkBox { padding: 3px; font-size:8pt; border: 1px solid #AAA;}
-.infoBoxTitle {  font-size: 10pt;  font-weight: bold;  }
-.infoBoxTitle {   font-size: 10pt;  font-weight: bold; }
-.infoBoxBadProcStatus { color: red; }
-a.homepageURL:hover {  color: red; }
-
-
-/* feedback messages */
-.errorMessage {  text-align: center;  color: red;  font-weight: bold;  font-size: 12pt; }
-.errorDescription {  text-align: center;  font-weight: bold;  font-size: 12pt; }
-.warningMessage {  text-align: center;  color: red;  font-weight: bold;  font-size: 10pt; }
-.infoMessage {  text-align: center;  color: red;  font-weight: bold; }
-
-/* nav and option boxes on several pages */ 
-.navBoxTitle {  font-size: 10pt;  font-weight: bold; }
-.navBoxItem {  font-size: 8pt;  font-weight: bold;  color: red; }
-.navBoxDate {  font-size: 8pt;  font-weight: bold; }
-.navBoxFile {  font-size: 8pt;  font-weight: bold;  text-align: center; }
-/* option boxes */
-.optBox { font-size: 10pt;  font-weight: bold; }
-.optBoxItem {  font-size: 8pt;  font-weight: bold;  color: red; }
-.optBoxTitle {  font-weight: bold;  font-size: 10pt; }
-.optBoxValue {  font-size: 8pt;  font-style: italic; }
-
-
-
-/* *********navbar frame specific styles ********************* */
-
-/* navbar */
-body.navbar {
-	background-color: black;
-	color: white; 
-	}
-/* navbar links
-body.navbar a:link,a:visited {
-  text-decoration: none;
-  color: #DEE7C6;  pale yellow 
+/*=======================================*/
+/* Input Fields                          */
+/*=======================================*/
+input[type=text], input[type=password], input[type=file] {
+	border: 1px inset #827e9a;
+	background-color: #eaeeff;
 }
-body.navbar a:hover,a:active {
- text-decoration: underline;
-  color: #3f5bcd; gold 
+input[type=text]:focus, input[type=password]:focus {
+	border: 1px inset #827e9a;
+	background-color: #fff7d7;
 }
+input[type=text][disabled], input[type=password][disabled] {
+	border: 1px dashed #827e9a;
+	background-color: #b7cae4;
+	color: #2c333c;
+}
+input[type=checkbox] { -moz-appearance: none;width:13px;height:13px; }
+
+
+.shadowBox {
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-bottom: 1px solid #bbb;
+	border-right: 1px solid #bbb;
+}
+
+
+/* these are reference colors for the color scheme:
+
+"Official" core color: #F24800
+
+                color    dark    light   border
+           OK:  green    88d066  cce8cc  777777
+      WARNING:  yellow   ffff00  feffc1  777777
+     CRITICAL:  red      f88888  ffdddd  777777
+      PENDING:  grey     acacac  fefefe  777777
+      UNKNOWN:  orange   ffbb55  ffddaa  777777
+  UNREACHABLE:  orange   ffbb55  ffddaa  777777
+INDETERMINATE:  purple           ddccff  777777
+     PROBLEMS:  blue             aaccff  777777
+
+          ACK:  aaaaaa
+       CUSTOM:  778899
+
+    important:  blue     99aacc          777777
+not important:  blue             aaccff  777777
+
+ table header:  d0d0d0
+     odd rows:  e7e7e7
+    even rows:  f4f2f2
+
+   titles: 12pt
+   body: 10pt
+   table headings: 9pt
+   controls: 9pt
+   data in tables: 8pt or 9pt
 */
-.navbarlogo {
-	margin: 0 0 10px 0;
-	}
 
-.navsection {
-	margin: 5px 0 10px 0;
-	/*color: #AAA; */
-	}
-	
-.navsectiontitle {
-	font-size: 9pt;
-	font-weight: bold;
-	border:1px solid #AAA;
-	padding: 2px;
+img.imgClick { cursor: pointer; }
+
+div.infoBoxWrap {
+	float:left;
+	display:inline-block;
+	margin:5px 0 10px 5px;
+	font-size: 8pt;
+	white-space: nowrap;
+	border-top: 2px solid black;
+	border-left: 2px solid black;
+	border-bottom: 2px solid #bbb;
+	border-right: 2px solid #bbb;
+}
+div.infoBoxTitle {
+	background-color: #d0d0d0;
+	border-bottom: 1px solid #aaaaaa;
+	font-size:10pt;
+	font-weight:bold;
 	text-align:center;
-	}
-
-div.navsectionlinks {
-	margin: 3px 0 0 0;
-	}
-
-ul.navsectionlinks {
-	margin: 0px;
-	padding: 0px;
-	list-style: none;
-	}
-
-ul.navsectionlinks li {
-	}
-
-/* main nav links */
-ul.navsectionlinks li a:link,ul.navsectionlinks li a:visited {
-	/*color: #DEE7C6; */ 
-	font-weight: bold;
-	font-size: 8pt;
-	text-decoration: none;	
-	padding: 0 0 0 15px;
-	background: transparent url(../images/greendot.gif) no-repeat scroll 0 0; 
-  	color: #DEE7C6; /* pale yellow */ 
-	}
-ul.navsectionlinks li a:hover ,ul.navsectionlinks li a:active{
-	/*color: #8391cd;*/
-	color:#FFC47F;   /*    this one was working before   */
-	background: transparent url(../images/orangedot.gif) no-repeat scroll 0 0;
-  /*	color: #3f5bcd;  gold */
-	}	
-
-
-ul.navsectionlinks li ul {
-	margin: 0px;
-	padding: 0 0 0 30px;
-	}
-
-ul.navsectionlinks li ul li {
-	}
-
-
-/* sub links on main nav */
-ul.navsectionlinks li ul li a:link,ul.navsectionlinks li ul li a:visited  {
-/*	color: #DEE7C6;  */
-	background: none; 
-	padding: 0;
-	font-weight: normal;
-  	color: #DEE7C6; /* pale yellow */ 
-	}
-
-ul.navsectionlinks li ul li a:hover,ul.navsectionlinks li ul li a:active  {
-	background: none;  
-	color:#FFC47F; 
-	}
-
-ul.navsectionlinks li ul li ul {
-	margin: 0px;
-	padding: 0 0 0 15px;
-	}
-
-div.navsectionheader {
-  padding: 0;
-  margin: 0;
+	padding: 5px 0;
 }
-div.navsectionheader ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-div.navsectionheader ul li {
-  font-size: 9pt;
-  font-weight: bold;
-  padding: 0 0 0 15px;
-}
-div.navsectionheader ul li ul li {
-  font-weight: normal;
-}
-
-.navbarsearch {
-	margin: 5px 0 0 0;
-	}
-
-.navbarsearch fieldset {
-	border: none;
-	}
-
-.navbarsearch fieldset legend {
-	font-size: 8pt;
-	}
-
-.navbarsearch input{
-/*	font-size: 8pt; */
-	color: black;
-	background-color: white;
-	}
-
-
-
-	
-
-/* **************** main page *********************** */
-#splashpage{
-	text-align: center;
-	}
-	
-#mainbrandsplash{
-	font-size: 12pt;
-	font-weight: bold;
-	margin: 0 0 35px 0;
-	}
-
-#maincopy{
-	margin: 0 0 15px 0;
-	}
-	
-#currentversioninfo{
-	font-size: 12pt;
-	}
-#currentversioninfo .product{
-	font-size: 14pt;
-	font-weight: bold;
-	}
-#currentversioninfo .version{
-	font-size: 14pt;
-	font-weight: bold;
-	}
-#currentversioninfo .releasedate{
-	font-size: 11pt;
-	margin: 5px 0 0 0;
-	}
-#currentversioninfo .checkforupdates{
-	font-size: 11pt;
-	font-weight: bold;
-	}
-#currentversioninfo .whatsnew{
-	font-size: 11pt;
-	font-weight: bold;
-	margin: 50px 0 0 0;
-	}
-
-#updateversioninfo{
-	margin: 15px auto 35px auto;
-	width: 400px;
-	}
-.updatechecksdisabled{
-	background-color: #FF9F9F;
-	border: 1px solid red;
-	padding: 10px;
-	}
-.updatechecksdisabled div.warningmessage{
-	font-weight: bold;
-	}
-#updateversioninfo div.submessage{
-	clear: left;
-	}
-.updateavailable{
-	background-color: #9FD4FF;
-	border: 1px solid blue;
-	padding: 10px;
-	}
-.updateavailable div.updatemessage{
-	font-size: 12pt;
-	font-weight: bold;
-	}
-	
-#splashpage #mainfooter{
-	/*margin: 100px 0 0 0;*/
-	clear: both;
-	font-size: 8pt;
-	}
-#splashpage #mainfooter .disclaimer{
-	/*width: 80%;*/
-	margin: auto;
-	}
-#splashpage #mainfooter .logos{
-	margin: 15px 0 0 0;
-	}
-
-
-a img {
-	border: none;
-	}
-
-#splashboxes {
-
-	/*border: 1px solid blue;*/
-	clear:both;
-	width: 800px; 
-	height:300px; 
-	margin-left: auto;
-	margin-right:auto; 
-	line-height:1.2em; /* added for better X-browser/OS viewing */
-
-	}
-#topsplashbox {
-	height:150px;
-	}
-#bottomsplashbox { 
-	height:150px;
-	}
-
-.splashbox {
+div.infoBox {
+	background-color: #eeeeee;
 	padding: 5px;
-	margin: 5px;
-	border: 1px solid #AAAAAA;
-	float: left;
-	text-align: left;
-	width:375px;
-	}
+}
+div.infoBoxBadProcStatus { font-size: 8pt; font-weight: bold; color: #ff8888; }
 
-.splashbox h2{
-	margin: 0px;
-	font-size: 12pt;
-	}
-.splashbox ul{
-    margin: 0;
-    padding: 5px 5px 5px 15px;
-	}
-.splashbox ul li{
-	clear: both;
-	}
-#splashbox1 {
-	}
-#splashbox2 {
-	}
+div.contextHelp {
+	float:right;
+	display:inline-block;
+	margin:5px;
+}
+
+
+
+.linkBox { font-size: 8pt; padding: 1px; white-space: nowrap; }
+/*table.linkBox td { white-space: nowrap; }*/
+
+.filter      { font-size: 8pt; padding: 1px; }
+.filterTitle { font-size: 9pt; font-weight: bold; }
+.filterName  { font-size: 8pt; text-align: right; font-weight: bold; }
+.filterValue { font-size: 8pt; }
+
+.errorDescription { font-size: 10pt; text-align: center; font-weight: bold; }
+.errorMessage     { font-size: 10pt; text-align: center; font-weight: bold; color: #ff8888; }
+.warningMessage   { font-size: 10pt; text-align: center; font-weight: bold; color: #ff8888; }
+
+.statusTitle { text-align: center; font-weight: bold; font-size: 12pt; white-space: nowrap; }
+.statusSort  { font-size: 8pt; }
+
+table.data    { padding: 0; }
+th.data       { font-size: 9pt; text-align: left; padding: 0 3px 0 3px; border-bottom: 1px solid #777777; color: #333333; }
+.dataOdd      { font-size: 8pt; background-color: #e7e7e7; padding: 0px 4px 0px 4px; }
+.dataEven     { font-size: 8pt; background-color: #f4f2f2; padding: 0px 4px 0px 4px; }
+.dataTitle    { font-size: 12pt; text-align: center; font-weight: bold; }
+.dataSubTitle { font-size: 10pt; text-align: center; font-weight: bold; }
+
+.optBox             { font-size:  9pt; white-space: nowrap; padding: 2px 0px 0px 0px; }
+.optBoxTitle        { font-size: 10pt; font-weight: bold; text-align: center; }
+.optBoxRequiredItem { font-size:  9pt; text-align: right; padding: 0px 5px 0px 5px; color: red; }
+.optBoxItem         { font-size:  9pt; text-align: right; padding: 0px 5px 0px 5px; }
+.optBoxValue        { font-size:  9pt; }
+
+.optionBoxTitle { font-size: 10pt; text-align: center; font-weight: bold; }
+.optionBox      { font-size: 10pt; padding: 2px; }
+
+.navBoxTitle { font-size: 10pt; font-weight: bold; white-space: nowrap; }
+.navBoxItem  { font-size: 8pt; }
+.navBoxDate  { font-size: 8pt; white-space: nowrap; }
+.navBoxFile  { font-size: 8pt; text-align: center; }
+
+.helpfulHint { font-size: 8pt; font-style: italic; text-align: center; }
+
+.logEntries { font-size: 8pt; white-space: nowrap; }
+
+.dateTimeBreak { font-size: 9pt; font-weight: bold; }
+
+.reportRange    { font-size: 10pt; white-space: nowrap; }
+.reportDuration { font-size:  8pt; white-space: nowrap; }
+.reportTime     { font-size:  8pt; white-space: nowrap; text-align: right; font-style: italic; }
+
+.reportSelectTitle    { font-size: 12pt; text-align: center; font-weight: bold; }
+.reportSelectSubTitle { font-size:  9pt; text-align: right; }
+.reportSelectItem     { font-size:  9pt; }
+.reportSelectTip      { font-size:  8pt; font-style: italic; }
+
+.dateSelectTitle    { font-size: 12pt; text-align: center; font-weight: bold; }
+.dateSelectSubTitle { font-size:  9pt; text-align: right; }
+.dateSelectItem     { font-size:  9pt; }
+
+.popupText { font-size: 8pt; background-color: #eeeeaa; border: 1px solid #777777; padding: 10px 10px 10px 10px; }
+
+.hostImportantProblem      { font-size: 8pt; background-color: #88aadd; border: 1px solid #aaaaaa; padding: 2px 5px; margin-bottom:2px; }
+.hostUnimportantProblem    { font-size: 8pt; background-color: #aaccff; border: 1px solid #888888; padding: 2px 5px; margin-bottom:2px; }
+
+.serviceImportantProblem   { font-size: 8pt; background-color: #88aadd; border: 1px solid #aaaaaa; padding: 2px 5px; margin-bottom:2px; }
+.serviceUnimportantProblem { font-size: 8pt; background-color: #aaccff; border: 1px solid #888888; padding: 2px 5px; margin-bottom:2px; }
+
+.outageImportantProblem    { font-size: 8pt; background-color: #88aadd; border: 1px solid #aaaaaa; padding: 2px 5px; margin-bottom:2px; }
+.outageUnimportantProblem  { font-size: 8pt; background-color: #aaccff; border: 1px solid #888888; padding: 2px 5px; margin-bottom:2px; }

@@ -1,0 +1,50 @@
+
+.navbar {
+	background: #e9e9e9;
+/*	padding: 5px 0 0 5px; */
+	height:100%;
+	width:170px;
+	float:left;
+	font-size: 9pt;
+	overflow: auto;
+	border-right: 1px solid black;
+}
+
+div.navbarlogo {
+	margin: 5px 0 5px 10px;
+}
+
+div.navsection {
+	margin-bottom: 10px;
+	width: 162px;
+}
+div.navsectiontitle {
+  font-size: 13px;
+  font-weight: bold;
+  padding: 2px;
+  background-color: #903939;
+  color:lightgoldenrodyellow;
+  text-align: center;
+  margin-bottom:2px;
+}
+
+div.navsection ul { margin-bottom: 3px; }
+div.navsection ul li { font-weight: bold; }
+div.navsection ul li ul li { font-weight: normal; }
+div.navsection ul li a { color: #40529b; }
+div.navsection ul li a:hover { text-decoration: underline; color: #33c5d8; }
+
+.navbarsearch {
+  margin: 5px 0 0 10px;
+}
+.navbarsearch fieldset {
+  border: none;
+}
+
+.navbarsearch fieldset legend {
+  font-size: 8pt;
+}
+
+.navbarsearch input {
+/*  font-size: 11px; */
+}

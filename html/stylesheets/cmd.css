@@ -1,14 +1,49 @@
+/* exfoliation: a nagios makeover                                          */
+/* Copyright 2010 Matthew Wall, all rights reserved                        */
+/*                                                                         */
+/* Permission to use, copy, modify, and distribute this software for any   */
+/* purpose with or without fee is hereby granted, provided that the above  */
+/* copyright notice and this permission notice appear in all copies.       */
 
 .cmd { }
 
-.cmdType {  font-size: 10pt;  font-weight: bold;  text-align: center;  color: red; }
-
-.commandDescription {   text-align: center;  background-color: #DBDBDB;  padding: 5px; }
-.descriptionTitle {  font-size: 10pt;  text-align: center;  font-weight: bold; }
-
-.optBox {   text-align: left;  padding: 5px;  background-color: #C4C2C2; }
-.optBoxTitle {  font-size: 10pt;  text-align: center;  font-weight: bold; }
-.optBoxItem {  font-size: 10pt;  text-align: left;  background-color: #C4C2C2; }
-.optBoxRequiredItem {  font-size: 10pt;  text-align: left;  color: red;  background-color: #C4C2C2; }
-
-
+.cmdType {
+	font-size: 12pt;
+	font-weight: bold;
+	color: #aa0000;
+	padding-bottom: 40px;
+}
+.commandDescription {
+	font-size: 8pt;
+	background-color: #f4f2f2;
+	border: 1px solid #d0d0d0;
+/*	border-top: 2px solid #666;
+	border-left: 2px solid #666;
+	border-bottom: 2px solid #fff;
+	border-right: 2px solid #fff;*/
+	padding: 4px 10px 4px 10px !important;
+	display: inline-block;
+	max-width: 550px;
+	text-align: left;
+}
+.descriptionTitle {
+	font-size: 10pt;
+	font-weight: bold;
+	margin: 10px 0 5px 0;
+}
+.infoMessageBox {
+	font-size: 8pt;
+	text-align: center;
+	margin-top: 30px;
+}
+.infoMessage {
+	background-color: #efefaa;
+	border: 1px solid #777777;
+	padding: 5px 10px;
+	text-align: center;
+	display: inline-block;
+}
+.optBox {
+	font-size: 9pt;
+	padding: 5px 5px 5px 5px;
+}

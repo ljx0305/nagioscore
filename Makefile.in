@@ -56,7 +56,7 @@ none:
 		@echo "Please supply a command line argument (i.e. 'make all').  Other targets are:"
 		@echo "   nagios cgis contrib modules workers"
 		@echo "   clean"
-		@echo "   install install-base install-cgis install-html install-exfoliation install-config install-init install-commandmode fullinstall"
+		@echo "   install install-base install-cgis install-html install-config install-init install-commandmode fullinstall"
 #		@echo "   uninstall"
 
 # FreeBSD make does not support -C option, so we'll use the Apache style... (patch by Stanley Hopcroft 12/27/1999)
@@ -105,14 +105,6 @@ all:
 	@echo ""
 	@echo "  make install-webconf"
 	@echo "     - This installs the Apache config file for the Nagios"
-	@echo "       web interface"
-	@echo ""
-	@echo "  make install-exfoliation"
-	@echo "     - This installs the Exfoliation theme for the Nagios"
-	@echo "       web interface"
-	@echo ""
-	@echo "  make install-classicui"
-	@echo "     - This installs the classic theme for the Nagios"
 	@echo "       web interface"
 	@echo ""
 	@echo ""
@@ -224,7 +216,6 @@ test-perl: cgis
 
 install-html:
 	cd $(SRC_HTM) && $(MAKE) install
-	$(MAKE) install-exfoliation
 
 install-base:
 	cd $(SRC_BASE) && $(MAKE) install
@@ -236,14 +227,12 @@ install:
 	cd $(SRC_BASE) && $(MAKE) $@
 	cd $(SRC_CGI) && $(MAKE) $@
 	cd $(SRC_HTM) && $(MAKE) $@
-	$(MAKE) install-exfoliation
 	$(MAKE) install-basic
 
 install-unstripped:
 	cd $(SRC_BASE) && $(MAKE) $@
 	cd $(SRC_CGI) && $(MAKE) $@
 	cd $(SRC_HTM) && $(MAKE) $@
-	$(MAKE) install-exfoliation
 	$(MAKE) install-basic
 
 install-basic:
@@ -302,30 +291,6 @@ install-webconf:
 
 	@echo ""
 	@echo "*** Nagios/Apache conf file installed ***"
-	@echo ""
-
-install-exfoliation:
-	@cd contrib/exfoliation; \
-	for file in $$(find . -path "./stylesheets/*" -o -path "./images/*" -type f); do \
-		install -m 644 $(INSTALL_OPTS) -D $${file} $(DESTDIR)$(HTMLDIR)/$${file}; \
-	done; \
-	cd ../..
-
-	@echo ""
-	@echo "*** Exfoliation theme installed ***"
-	@echo "NOTE: Use 'make install-classicui' to revert to classic Nagios theme";
-	@echo ""
-
-install-classicui:
-	@cd html; \
-	for file in $$(find . -path "./stylesheets/*" -o -path "./images/*" -type f); do \
-		install -m 644 $(INSTALL_OPTS) -D $${file} $(DESTDIR)$(HTMLDIR)/$${file}; \
-	done; \
-	cd ..
-
-	@echo ""
-	@echo "*** Classic theme installed ***"
-	@echo "NOTE: Use 'make install-exfoliation' to use new Nagios theme";
 	@echo ""
 
 install-init: install-daemoninit

@@ -1,4 +1,4 @@
-/**************************************************************************
+ /**************************************************************************
  *
  * STATUS.C -  Nagios Status CGI
  *
@@ -285,19 +285,11 @@ int main(void) {
 
 	if(display_header == TRUE) {
 
-		/* begin top table */
-		printf("<table class='headertable'>\n");
-		printf("<tr>\n");
-
-		/* left column of the first row */
-		printf("<td align=left valign=top width=33%%>\n");
-
 		/* info table */
-		display_info_table("Current Network Status", TRUE, &current_authdata);
+		display_info_table2("Current Network Status", TRUE, &current_authdata, FALSE);
+		printf("<hr>\n");
 
-		printf("<table class='linkBox'>\n");
-		printf("<tr><td class='linkBox'>\n");
-
+		printf("<div class='linkBox'>\n");
 		if(display_type == DISPLAY_HOSTS) {
 			printf("<a href='%s?host=%s'>View History For %s</a><br>\n", HISTORY_CGI, (show_all_hosts == TRUE) ? "all" : url_encode(host_name), (show_all_hosts == TRUE) ? "all hosts" : "This Host");
 			printf("<a href='%s?host=%s'>View Notifications For %s</a>\n", NOTIFICATIONS_CGI, (show_all_hosts == TRUE) ? "all" : url_encode(host_name), (show_all_hosts == TRUE) ? "All Hosts" : "This Host");
@@ -379,23 +371,15 @@ int main(void) {
 				}
 			}
 
-		printf("</td></tr>\n");
-		printf("</table>\n");
+		printf("</div></div></div>\n");
 
-		printf("</td>\n");
-
-		/* middle column of top row */
-		printf("<td align=center valign=top width=33%%>\n");
+		printf("<div class=totalsDiv>\n");
 		show_host_status_totals();
-		printf("</td>\n");
-
-		/* right hand column of top row */
-		printf("<td align=center valign=top width=33%%>\n");
 		show_service_status_totals();
-		printf("</td>\n");
+
+		printf("</div>\n");
 
 		/* display context-sensitive help */
-		printf("<td align=right valign=bottom>\n");
 		if(display_type == DISPLAY_HOSTS)
 			display_context_help(CONTEXTHELP_STATUS_DETAIL);
 		else if(display_type == DISPLAY_SERVICEGROUPS) {
@@ -418,13 +402,17 @@ int main(void) {
 			else if(group_style_type == STYLE_GRID)
 				display_context_help(CONTEXTHELP_STATUS_HGGRID);
 			}
-		printf("</td>\n");
 
 		/* end of top table */
+/*
 		printf("</tr>\n");
 		printf("</table>\n");
+*/
+
+		printf("</div></div>\n");
 		}
 
+	printf("</div><br clear=all>\n");
 
 	/* embed sound tag if necessary... */
 	if(problem_hosts_unreachable > 0 && host_unreachable_sound != NULL)
@@ -852,9 +840,10 @@ void show_service_status_totals(void) {
 	total_problems = total_unknown + total_warning + total_critical;
 
 
+	printf("<div class='totalsWrap shadowBox'>\n");
 	printf("<div class='serviceTotals'>Service Status Totals</div>\n");
 
-	printf("<table border='0' cellspacing='0' cellpadding='0'>\n");
+	printf("<table>\n");
 	printf("<tr><td>\n");
 
 	printf("<table class='serviceTotals'>\n");
@@ -1086,10 +1075,10 @@ void show_host_status_totals(void) {
 	total_hosts = total_up + total_down + total_unreachable + total_pending;
 	total_problems = total_down + total_unreachable;
 
+	printf("<div class='totalsWrap shadowBox'>\n");
 	printf("<div class='hostTotals'>Host Status Totals</div>\n");
 
-	printf("<table border=0 cellspacing=0 cellpadding=0>\n");
-	printf("<tr><td>\n");
+	printf("<table><tr><td>\n");
 
 
 	printf("<table class='hostTotals'>\n");
@@ -1317,7 +1306,7 @@ void show_service_detail(void) {
 		use_sort = FALSE;
 
 
-	printf("<table class='pageTitle' border='0' width='100%%'>\n");
+	printf("<table class='pageTitle'>\n");
 	printf("<tr>\n");
 
 	printf("<td valign=top align=left width=33%%>\n");
@@ -1371,7 +1360,9 @@ void show_service_detail(void) {
 	if(service_filter != NULL)
 		printf("<div align='center' class='statusSort'>Filtered By Services Matching \'%s\'</div>", service_filter);
 
+/*
 	printf("<br>");
+*/
 
 	printf("</td>\n");
 
@@ -1447,7 +1438,7 @@ void show_service_detail(void) {
 	create_page_limiter(result_limit,temp_url);
 
 	/* the main list of services */
-	printf("<table border=0 width=100%% class='status'>\n");
+	printf("<table class='status'>\n");
 	printf("<tr>\n");
 
 	printf("<th class='status'>Host&nbsp;<a href='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' border=0 ALT='Sort by host name (ascending)' TITLE='Sort by host name (ascending)'></a><a href='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' border=0 ALT='Sort by host name (descending)' TITLE='Sort by host name (descending)'></a></th>", temp_url, SORT_ASCENDING, SORT_HOSTNAME, url_images_path, UP_ARROW_ICON, temp_url, SORT_DESCENDING, SORT_HOSTNAME, url_images_path, DOWN_ARROW_ICON);
@@ -1588,13 +1579,6 @@ void show_service_detail(void) {
 			else
 				new_host = FALSE;
 
-			if(new_host == TRUE) {
-				if(strcmp(last_host, "")) {
-					printf("<tr><td colspan='6'></td></tr>\n");
-					printf("<tr><td colspan='6'></td></tr>\n");
-					}
-				}
-
 			if(odd)
 				odd = 0;
 			else
@@ -1653,10 +1637,9 @@ void show_service_detail(void) {
 			status[sizeof(status) - 1] = '\x0';
 
 
-			printf("<tr>\n");
-
 			/* host name column */
 			if(new_host == TRUE) {
+				printf("<tr>\n");
 
 				/* grab macros */
 				grab_host_macros_r(mac, temp_host);
@@ -1680,43 +1663,25 @@ void show_service_detail(void) {
 				else
 					host_status_bg_class = (odd) ? "Even" : "Odd";
 
-				printf("<td class='status%s'>", host_status_bg_class);
-
-				printf("<table border=0 width='100%%' cellpadding=0 cellspacing=0>\n");
-				printf("<tr>\n");
-				printf("<td align='left'>\n");
-				printf("<table border=0 cellpadding=0 cellspacing=0>\n");
-				printf("<tr>\n");
-				printf("<td align=left valign=center class='status%s'><a href='%s?type=%d&host=%s' title='%s'>%s</a></td>\n", host_status_bg_class, EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), temp_host->address, temp_status->host_name);
-				printf("</tr>\n");
-				printf("</table>\n");
-				printf("</td>\n");
-				printf("<td align=right valign=center>\n");
-				printf("<table border=0 cellpadding=0 cellspacing=0>\n");
-				printf("<tr>\n");
+				printf("<td class='status%s'><a href='%s?type=%d&host=%s' title='%s'>%s</a>\n", host_status_bg_class, EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), temp_host->address, temp_status->host_name);
 				total_comments = number_of_host_comments(temp_host->name);
-				if(temp_hoststatus->problem_has_been_acknowledged == TRUE) {
-					printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host problem has been acknowledged' TITLE='This host problem has been acknowledged'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, ACKNOWLEDGEMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-					}
+				printf("<span class='statIcons'>\n");
+				if(temp_hoststatus->problem_has_been_acknowledged == TRUE)
+					printf("<a href='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host problem has been acknowledged' TITLE='This host problem has been acknowledged'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, ACKNOWLEDGEMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 				/* only show comments if this is a non-read-only user */
 				if(is_authorized_for_read_only(&current_authdata) == FALSE) {
 					if(total_comments > 0)
-						printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host has %d comment%s associated with it' TITLE='This host has %d comment%s associated with it'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, COMMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, total_comments, (total_comments == 1) ? "" : "s", total_comments, (total_comments == 1) ? "" : "s");
+						printf("<a href='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host has %d comment%s associated with it' TITLE='This host has %d comment%s associated with it'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, COMMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, total_comments, (total_comments == 1) ? "" : "s", total_comments, (total_comments == 1) ? "" : "s");
 					}
-				if(temp_hoststatus->notifications_enabled == FALSE) {
-					printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this host have been disabled' TITLE='Notifications for this host have been disabled'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, NOTIFICATIONS_DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-					}
-				if(temp_hoststatus->checks_enabled == FALSE) {
-					printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Checks of this host have been disabled'd TITLE='Checks of this host have been disabled'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-					}
-				if(temp_hoststatus->is_flapping == TRUE) {
-					printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host is flapping between states' TITLE='This host is flapping between states'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, FLAPPING_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-					}
-				if(temp_hoststatus->scheduled_downtime_depth > 0) {
-					printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host is currently in a period of scheduled downtime' TITLE='This host is currently in a period of scheduled downtime'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, SCHEDULED_DOWNTIME_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-					}
+				if(temp_hoststatus->notifications_enabled == FALSE)
+					printf("<a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this host have been disabled' TITLE='Notifications for this host have been disabled'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, NOTIFICATIONS_DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				if(temp_hoststatus->checks_enabled == FALSE)
+					printf("<a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Checks of this host have been disabled'd TITLE='Checks of this host have been disabled'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				if(temp_hoststatus->is_flapping == TRUE)
+					printf("<a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host is flapping between states' TITLE='This host is flapping between states'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, FLAPPING_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				if(temp_hoststatus->scheduled_downtime_depth > 0)
+					printf("<a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host is currently in a period of scheduled downtime' TITLE='This host is currently in a period of scheduled downtime'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, SCHEDULED_DOWNTIME_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 				if(temp_host->notes_url != NULL) {
-					printf("<td align=center valign=center>");
 					printf("<a href='");
 					process_macros_r(mac, temp_host->notes_url, &processed_string, 0);
 					printf("%s", processed_string);
@@ -1724,10 +1689,8 @@ void show_service_detail(void) {
 					printf("' TARGET='%s'>", (notes_url_target == NULL) ? "_blank" : notes_url_target);
 					printf("<IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", url_images_path, NOTES_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, "View Extra Host Notes", "View Extra Host Notes");
 					printf("</a>");
-					printf("</td>\n");
 					}
 				if(temp_host->action_url != NULL) {
-					printf("<td align=center valign=center>");
 					printf("<a href='");
 					process_macros_r(mac, temp_host->action_url, &processed_string, 0);
 					printf("%s", processed_string);
@@ -1735,10 +1698,8 @@ void show_service_detail(void) {
 					printf("' TARGET='%s'>", (action_url_target == NULL) ? "_blank" : action_url_target);
 					printf("<IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", url_images_path, ACTION_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, "Perform Extra Host Actions", "Perform Extra Host Actions");
 					printf("</a>");
-					printf("</td>\n");
 					}
 				if(temp_host->icon_image != NULL) {
-					printf("<td align=center valign=center>");
 					printf("<a href='%s?type=%d&host=%s'>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name));
 					printf("<IMG SRC='%s", url_logo_images_path);
 					process_macros_r(mac, temp_host->icon_image, &processed_string, 0);
@@ -1746,71 +1707,56 @@ void show_service_detail(void) {
 					free(processed_string);
 					printf("' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, (temp_host->icon_image_alt == NULL) ? "" : temp_host->icon_image_alt, (temp_host->icon_image_alt == NULL) ? "" : temp_host->icon_image_alt);
 					printf("</a>");
-					printf("</td>\n");
 					}
-				printf("</tr>\n");
-				printf("</table>\n");
-				printf("</td>\n");
-				printf("</tr>\n");
-				printf("</table>\n");
+				printf("</span>\n");
 				}
-			else
-				printf("<td>");
+			else {
+				printf("<tr>\n");
+				printf("<td class='status%s'>", status_bg_class);
+			}
 			printf("</td>\n");
 
 			/* grab macros */
 			grab_service_macros_r(mac, temp_service);
 
 			/* service name column */
-			printf("<td class='status%s'>", status_bg_class);
-			printf("<table border=0 WIDTH='100%%' cellspacing=0 cellpadding=0>");
-			printf("<tr>");
-			printf("<td align='left'>");
-			printf("<table border=0 cellspacing=0 cellpadding=0>\n");
-			printf("<tr>\n");
-			printf("<td align='left' valign=center class='status%s'><a href='%s?type=%d&host=%s", status_bg_class, EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
+			printf("<td class='status%s'><a href='%s?type=%d&host=%s", status_bg_class, EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
 			printf("&service=%s'>", url_encode(temp_status->description));
-			printf("%s</a></td>", temp_status->description);
-			printf("</tr>\n");
-			printf("</table>\n");
-			printf("</td>\n");
-			printf("<td ALIGN=RIGHT class='status%s'>\n", status_bg_class);
-			printf("<table border=0 cellspacing=0 cellpadding=0>\n");
-			printf("<tr>\n");
+			printf("%s</a>", temp_status->description);
+			printf("<span class='statIcons'>\n");
 			total_comments = number_of_service_comments(temp_service->host_name, temp_service->description);
 			/* only show comments if this is a non-read-only user */
 			if(is_authorized_for_read_only(&current_authdata) == FALSE) {
 				if(total_comments > 0) {
-					printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
-					printf("&service=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This service has %d comment%s associated with it' TITLE='This service has %d comment%s associated with it'></a></td>", url_encode(temp_status->description), url_images_path, COMMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, total_comments, (total_comments == 1) ? "" : "s", total_comments, (total_comments == 1) ? "" : "s");
+					printf("<a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
+					printf("&service=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This service has %d comment%s associated with it' TITLE='This service has %d comment%s associated with it'></a>", url_encode(temp_status->description), url_images_path, COMMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, total_comments, (total_comments == 1) ? "" : "s", total_comments, (total_comments == 1) ? "" : "s");
 					}
 				}
 			if(temp_status->problem_has_been_acknowledged == TRUE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
-				printf("&service=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This service problem has been acknowledged' TITLE='This service problem has been acknowledged'></a></td>", url_encode(temp_status->description), url_images_path, ACKNOWLEDGEMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				printf("<a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
+				printf("&service=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This service problem has been acknowledged' TITLE='This service problem has been acknowledged'></a>", url_encode(temp_status->description), url_images_path, ACKNOWLEDGEMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 				}
 			if(temp_status->checks_enabled == FALSE && temp_status->accept_passive_checks == FALSE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Active and passive checks have been disabled for this service' TITLE='Active and passive checks have been disabled for this service'></a></td>", url_encode(temp_status->description), url_images_path, DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				printf("<a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
+				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Active and passive checks have been disabled for this service' TITLE='Active and passive checks have been disabled for this service'></a>", url_encode(temp_status->description), url_images_path, DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 				}
 			else if(temp_status->checks_enabled == FALSE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Active checks of the service have been disabled - only passive checks are being accepted' TITLE='Active checks of the service have been disabled - only passive checks are being accepted'></a></td>", url_encode(temp_status->description), url_images_path, PASSIVE_ONLY_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				printf("<a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
+				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Active checks of the service have been disabled - only passive checks are being accepted' TITLE='Active checks of the service have been disabled - only passive checks are being accepted'></a>", url_encode(temp_status->description), url_images_path, PASSIVE_ONLY_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 				}
 			if(temp_status->notifications_enabled == FALSE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this service have been disabled' TITLE='Notifications for this service have been disabled'></a></td>", url_encode(temp_status->description), url_images_path, NOTIFICATIONS_DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				printf("<a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
+				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this service have been disabled' TITLE='Notifications for this service have been disabled'></a>", url_encode(temp_status->description), url_images_path, NOTIFICATIONS_DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 				}
 			if(temp_status->is_flapping == TRUE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This service is flapping between states' TITLE='This service is flapping between states'></a></td>", url_encode(temp_status->description), url_images_path, FLAPPING_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				printf("<a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
+				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This service is flapping between states' TITLE='This service is flapping between states'></a>", url_encode(temp_status->description), url_images_path, FLAPPING_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 				}
 			if(temp_status->scheduled_downtime_depth > 0) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This service is currently in a period of scheduled downtime' TITLE='This service is currently in a period of scheduled downtime'></a></td>", url_encode(temp_status->description), url_images_path, SCHEDULED_DOWNTIME_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+				printf("<a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_status->host_name));
+				printf("&service=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This service is currently in a period of scheduled downtime' TITLE='This service is currently in a period of scheduled downtime'></a>", url_encode(temp_status->description), url_images_path, SCHEDULED_DOWNTIME_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 				}
 			if(temp_service->notes_url != NULL) {
-				printf("<td align=center valign=center>");
 				printf("<a href='");
 				process_macros_r(mac, temp_service->notes_url, &processed_string, 0);
 				printf("%s", processed_string);
@@ -1818,10 +1764,8 @@ void show_service_detail(void) {
 				printf("' TARGET='%s'>", (notes_url_target == NULL) ? "_blank" : notes_url_target);
 				printf("<IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", url_images_path, NOTES_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, "View Extra Service Notes", "View Extra Service Notes");
 				printf("</a>");
-				printf("</td>\n");
 				}
 			if(temp_service->action_url != NULL) {
-				printf("<td align=center valign=center>");
 				printf("<a href='");
 				process_macros_r(mac, temp_service->action_url, &processed_string, 0);
 				printf("%s", processed_string);
@@ -1829,10 +1773,8 @@ void show_service_detail(void) {
 				printf("' TARGET='%s'>", (action_url_target == NULL) ? "_blank" : action_url_target);
 				printf("<IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", url_images_path, ACTION_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, "Perform Extra Service Actions", "Perform Extra Service Actions");
 				printf("</a>");
-				printf("</td>\n");
 				}
 			if(temp_service->icon_image != NULL) {
-				printf("<td ALIGN=center valign=center>");
 				printf("<a href='%s?type=%d&host=%s", EXTINFO_CGI, DISPLAY_SERVICE_INFO, url_encode(temp_service->host_name));
 				printf("&service=%s'>", url_encode(temp_service->description));
 				printf("<IMG SRC='%s", url_logo_images_path);
@@ -1841,18 +1783,11 @@ void show_service_detail(void) {
 				free(processed_string);
 				printf("' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, (temp_service->icon_image_alt == NULL) ? "" : temp_service->icon_image_alt, (temp_service->icon_image_alt == NULL) ? "" : temp_service->icon_image_alt);
 				printf("</a>");
-				printf("</td>\n");
 				}
-			if(enable_splunk_integration == TRUE) {
-				printf("<td ALIGN=center valign=center>");
+			if(enable_splunk_integration == TRUE)
 				display_splunk_service_url(temp_service);
-				printf("</td>\n");
-				}
-			printf("</tr>\n");
-			printf("</table>\n");
-			printf("</td>\n");
-			printf("</tr>");
-			printf("</table>");
+
+			printf("</span>\n");
 			printf("</td>\n");
 
 			/* state duration calculation... */
@@ -1968,10 +1903,7 @@ void show_host_detail(void) {
 		use_sort = FALSE;
 
 
-//	printf("<P>\n");
-
-
-	printf("<table class='pageTitle' border='0' width='100%%'>\n");
+	printf("<table class='pageTitle'>\n");
 	printf("<tr>\n");
 
 	printf("<td valign=top align=left width=33%%>\n");
@@ -2008,7 +1940,9 @@ void show_host_detail(void) {
 		printf("</div>\n");
 		}
 
+/*
 	printf("<br>");
+*/
 
 	printf("</td>\n");
 
@@ -2070,8 +2004,7 @@ void show_host_detail(void) {
 
 
 	/* the main list of hosts */
-	printf("<div align='center'>\n");
-	printf("<table border=0 class='status' width='100%%'>\n");
+	printf("<table class='status'>\n");
 	printf("<tr>\n");
 
 	printf("<th class='status'>Host&nbsp;<a href='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' border=0 ALT='Sort by host name (ascending)' TITLE='Sort by host name (ascending)'></a><a href='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' border=0 ALT='Sort by host name (descending)' TITLE='Sort by host name (descending)'></a></th>", temp_url, SORT_ASCENDING, SORT_HOSTNAME, url_images_path, UP_ARROW_ICON, temp_url, SORT_DESCENDING, SORT_HOSTNAME, url_images_path, DOWN_ARROW_ICON);
@@ -2213,40 +2146,25 @@ void show_host_detail(void) {
 
 			/**** host name column ****/
 
-			printf("<td class='status%s'>", status_class);
-
-			printf("<table border=0 WIDTH='100%%' cellpadding=0 cellspacing=0>\n");
-			printf("<tr>\n");
-			printf("<td align='left'>\n");
-			printf("<table border=0 cellpadding=0 cellspacing=0>\n");
-			printf("<tr>\n");
-			printf("<td align=left valign=center class='status%s'><a href='%s?type=%d&host=%s' title='%s'>%s</a>&nbsp;</td>\n", status_class, EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), temp_host->address, temp_status->host_name);
-			printf("</tr>\n");
-			printf("</table>\n");
-			printf("</td>\n");
-			printf("<td align=right valign=center>\n");
-			printf("<table border=0 cellpadding=0 cellspacing=0>\n");
-			printf("<tr>\n");
 			total_comments = number_of_host_comments(temp_host->name);
-			if(temp_status->problem_has_been_acknowledged == TRUE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host problem has been acknowledged' TITLE='This host problem has been acknowledged'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, ACKNOWLEDGEMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-				}
+
+			printf("<td class='status%s'>", status_bg_class);
+			printf("<a href='%s?type=%d&host=%s' title='%s'>%s</a>&nbsp;\n", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), temp_host->address, temp_status->host_name);
+
+			printf("<span class='statIcons'>\n");
+			if(temp_status->problem_has_been_acknowledged == TRUE)
+				printf("<a href='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' WIDTH=%d HEIGHT=%d ALT='This host problem has been acknowledged' TITLE='This host problem has been acknowledged'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, ACKNOWLEDGEMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 			if(total_comments > 0)
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host has %d comment%s associated with it' TITLE='This host has %d comment%s associated with it'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, COMMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, total_comments, (total_comments == 1) ? "" : "s", total_comments, (total_comments == 1) ? "" : "s");
-			if(temp_status->notifications_enabled == FALSE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this host have been disabled' TITLE='Notifications for this host have been disabled'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, NOTIFICATIONS_DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-				}
-			if(temp_status->checks_enabled == FALSE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Checks of this host have been disabled' TITLE='Checks of this host have been disabled'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-				}
-			if(temp_status->is_flapping == TRUE) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host is flapping between states' TITLE='This host is flapping between states'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, FLAPPING_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-				}
-			if(temp_status->scheduled_downtime_depth > 0) {
-				printf("<td ALIGN=center valign=center><a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host is currently in a period of scheduled downtime' TITLE='This host is currently in a period of scheduled downtime'></a></td>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, SCHEDULED_DOWNTIME_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
-				}
+				printf("<a href='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host has %d comment%s associated with it' TITLE='This host has %d comment%s associated with it'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, COMMENT_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, total_comments, (total_comments == 1) ? "" : "s", total_comments, (total_comments == 1) ? "" : "s");
+			if(temp_status->notifications_enabled == FALSE)
+				printf("<a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this host have been disabled' TITLE='Notifications for this host have been disabled'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, NOTIFICATIONS_DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+			if(temp_status->checks_enabled == FALSE)
+				printf("<a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='Checks of this host have been disabled' TITLE='Checks of this host have been disabled'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, DISABLED_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+			if(temp_status->is_flapping == TRUE)
+				printf("<a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host is flapping between states' TITLE='This host is flapping between states'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, FLAPPING_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
+			if(temp_status->scheduled_downtime_depth > 0)
+				printf("<a href='%s?type=%d&host=%s'><IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='This host is currently in a period of scheduled downtime' TITLE='This host is currently in a period of scheduled downtime'></a>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name), url_images_path, SCHEDULED_DOWNTIME_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT);
 			if(temp_host->notes_url != NULL) {
-				printf("<td align=center valign=center>");
 				printf("<a href='");
 				process_macros_r(mac, temp_host->notes_url, &processed_string, 0);
 				printf("%s", processed_string);
@@ -2254,10 +2172,8 @@ void show_host_detail(void) {
 				printf("' TARGET='%s'>", (notes_url_target == NULL) ? "_blank" : notes_url_target);
 				printf("<IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", url_images_path, NOTES_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, "View Extra Host Notes", "View Extra Host Notes");
 				printf("</a>");
-				printf("</td>\n");
 				}
 			if(temp_host->action_url != NULL) {
-				printf("<td align=center valign=center>");
 				printf("<a href='");
 				process_macros_r(mac, temp_host->action_url, &processed_string, 0);
 				printf("%s", processed_string);
@@ -2265,10 +2181,8 @@ void show_host_detail(void) {
 				printf("' TARGET='%s'>", (action_url_target == NULL) ? "_blank" : action_url_target);
 				printf("<IMG SRC='%s%s' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", url_images_path, ACTION_ICON, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, "Perform Extra Host Actions", "Perform Extra Host Actions");
 				printf("</a>");
-				printf("</td>\n");
 				}
 			if(temp_host->icon_image != NULL) {
-				printf("<td align=center valign=center>");
 				printf("<a href='%s?type=%d&host=%s'>", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_status->host_name));
 				printf("<IMG SRC='%s", url_logo_images_path);
 				process_macros_r(mac, temp_host->icon_image, &processed_string, 0);
@@ -2276,21 +2190,13 @@ void show_host_detail(void) {
 				free(processed_string);
 				printf("' border=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>", STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT, (temp_host->icon_image_alt == NULL) ? "" : temp_host->icon_image_alt, (temp_host->icon_image_alt == NULL) ? "" : temp_host->icon_image_alt);
 				printf("</a>");
-				printf("</td>\n");
 				}
 			if(enable_splunk_integration == TRUE) {
-				printf("<td ALIGN=center valign=center>");
 				display_splunk_host_url(temp_host);
-				printf("</td>\n");
 				}
-			printf("<td>");
+
 			printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='View Service Details For This Host' title='View Service Details For This Host'></a>", STATUS_CGI, url_encode(temp_status->host_name), url_images_path, STATUS_DETAIL_ICON);
-			printf("</td>\n");
-			printf("</tr>\n");
-			printf("</table>\n");
-			printf("</td>\n");
-			printf("</tr>\n");
-			printf("</table>\n");
+			printf("</span>\n");
 
 			printf("</td>\n");
 
@@ -2335,7 +2241,6 @@ void show_host_detail(void) {
 		}
 
 	printf("</table>\n");
-	printf("</div>\n");
 
 	/* if user couldn't see anything, print out some helpful info... */
 	if(user_has_seen_something == FALSE) {
@@ -2406,7 +2311,7 @@ void show_servicegroup_overviews(void) {
 
 
 		printf("<div ALIGN=center>\n");
-		printf("<table border=0 cellpadding=10>\n");
+		printf("<table cellpadding=10>\n");
 
 		current_column = 1;
 
@@ -2454,7 +2359,7 @@ void show_servicegroup_overviews(void) {
 
 			//printf("<P>\n");
 			printf("<div align='center'>\n");
-			printf("<table border=0 cellpadding=0 cellspacing=0><tr><td align='center'>\n");
+			printf("<table><tr><td align='center'>\n");
 
 			if(is_authorized_for_servicegroup(temp_servicegroup, &current_authdata) == TRUE) {
 
@@ -3315,10 +3220,10 @@ void show_servicegroup_grid(servicegroup *temp_servicegroup) {
 
 		printf("<td class='status%s'>", host_status_class);
 
-		printf("<table border=0 WIDTH='100%%' cellpadding=0 cellspacing=0>\n");
+		printf("<table WIDTH='100%%'>\n");
 		printf("<tr>\n");
 		printf("<td align='left'>\n");
-		printf("<table border=0 cellpadding=0 cellspacing=0>\n");
+		printf("<table>\n");
 		printf("<tr>\n");
 		printf("<td align=left valign=center class='status%s'>", host_status_class);
 		printf("<a href='%s?type=%d&host=%s'>%s</a>\n", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_host->name), temp_host->name);
@@ -3327,7 +3232,7 @@ void show_servicegroup_grid(servicegroup *temp_servicegroup) {
 		printf("</table>\n");
 		printf("</td>\n");
 		printf("<td align=right valign=center nowrap>\n");
-		printf("<table border=0 cellpadding=0 cellspacing=0>\n");
+		printf("<table>\n");
 		printf("<tr>\n");
 
 		if(temp_host->icon_image != NULL) {
@@ -3480,7 +3385,7 @@ void show_hostgroup_overviews(void) {
 
 
 		printf("<div ALIGN=center>\n");
-		printf("<table border=0 cellpadding=10>\n");
+		printf("<table cellpadding=10>\n");
 
 		current_column = 1;
 
@@ -3528,7 +3433,7 @@ void show_hostgroup_overviews(void) {
 
 			printf("<P>\n");
 			printf("<div align='center'>\n");
-			printf("<table border=0 cellpadding=0 cellspacing=0><tr><td align='center'>\n");
+			printf("<table><tr><td align='center'>\n");
 
 			if(is_authorized_for_hostgroup(temp_hostgroup, &current_authdata) == TRUE) {
 
@@ -3675,7 +3580,7 @@ void show_servicegroup_hostgroup_member_overview(hoststatus *hststatus, int odd,
 
 	printf("<td class='status%s'>\n", status_bg_class);
 
-	printf("<table border=0 WIDTH=100%% cellpadding=0 cellspacing=0>\n");
+	printf("<table WIDTH=100%%>\n");
 	printf("<tr class='status%s'>\n", status_bg_class);
 	printf("<td class='status%s'><a href='%s?host=%s&style=detail' title='%s'>%s</a></td>\n", status_bg_class, STATUS_CGI, url_encode(hststatus->host_name), temp_host->address, hststatus->host_name);
 
@@ -4556,10 +4461,10 @@ void show_hostgroup_grid(hostgroup *temp_hostgroup) {
 
 		printf("<td class='status%s'>", host_status_class);
 
-		printf("<table border=0 WIDTH='100%%' cellpadding=0 cellspacing=0>\n");
+		printf("<table WIDTH='100%%'>\n");
 		printf("<tr>\n");
 		printf("<td align='left'>\n");
-		printf("<table border=0 cellpadding=0 cellspacing=0>\n");
+		printf("<table>\n");
 		printf("<tr>\n");
 		printf("<td align=left valign=center class='status%s'>", host_status_class);
 		printf("<a href='%s?type=%d&host=%s'>%s</a>\n", EXTINFO_CGI, DISPLAY_HOST_INFO, url_encode(temp_host->name), temp_host->name);
@@ -4568,7 +4473,7 @@ void show_hostgroup_grid(hostgroup *temp_hostgroup) {
 		printf("</table>\n");
 		printf("</td>\n");
 		printf("<td align=right valign=center nowrap>\n");
-		printf("<table border=0 cellpadding=0 cellspacing=0>\n");
+		printf("<table>\n");
 		printf("<tr>\n");
 
 		if(temp_host->icon_image != NULL) {
@@ -5167,7 +5072,7 @@ void show_filters(void) {
 
 		printf("<table class='filter'>\n");
 		printf("<tr><td class='filter'>\n");
-		printf("<table border=0 cellspacing=2 cellpadding=0>\n");
+		printf("<table cellspacing=2>\n");
 		printf("<tr><td colspan=2 valign=top align=left class='filterTitle'>Display Filters:</td></tr>");
 		printf("<tr><td valign=top align=left class='filterName'>Host Status Types:</td>");
 		printf("<td valign=top align=left class='filterValue'>");
@@ -5439,22 +5344,22 @@ void create_pagenumbers(int total_entries,char *temp_url,int type_service) {
 		printf("<a href='%s&start=%i&limit=%i' class='pagenumber' title='Last Page'><img src='%s%s' height='15' width='15' alt='>>' /></a>\n",temp_url,((pages)*result_limit),result_limit,url_images_path,LAST_PAGE_ICON);
 		printf("</div> <!-- end inner_page_numbers div -->\n");
 		if(type_service == TRUE)
-			printf("<br /><div class='itemTotalsTitle'>Results %i - %i of %d Matching Services</div>\n</div>\n",page_start,((page_start+result_limit) > total_entries ? total_entries :(page_start+result_limit) ),total_entries );
+			printf("<div class='itemTotalsTitle'>Results %i - %i of %d Matching Services</div>\n</div>\n",page_start,((page_start+result_limit) > total_entries ? total_entries :(page_start+result_limit) ),total_entries );
 		else
-			printf("<br /><div class='itemTotalsTitle'>Results %i - %i of %d Matching Hosts</div>\n\n",page_start,((page_start+result_limit) > total_entries ? total_entries :(page_start+result_limit) ),total_entries );
+			printf("<div class='itemTotalsTitle'>Results %i - %i of %d Matching Hosts</div>\n\n",page_start,((page_start+result_limit) > total_entries ? total_entries :(page_start+result_limit) ),total_entries );
 
 		printf("</div> <!-- end bottom_page_numbers div -->\n\n");
 		}
 	else {
 		if(type_service == TRUE)
-			printf("<br /><div class='itemTotalsTitle'>Results %i - %i of %d Matching Services</div>\n</div>\n",1,total_entries,total_entries);
+			printf("<div class='itemTotalsTitle'>Results %i - %i of %d Matching Services</div>\n</div>\n",1,total_entries,total_entries);
 		else
-			printf("<br /><div class='itemTotalsTitle'>Results %i - %i of %d Matching Hosts</div>\n\n",1,total_entries,total_entries);
+			printf("<div class='itemTotalsTitle'>Results %i - %i of %d Matching Hosts</div>\n\n",1,total_entries,total_entries);
 
 		}
 
 	/* show total results displayed */
-	//printf("<br /><div class='itemTotalsTitle'>Results %i - %i of %d Matching Services</div>\n</div>\n",page_start,((page_start+result_limit) > total_entries ? total_entries :(page_start+result_limit) ),total_entries );
+	//printf("<div class='itemTotalsTitle'>Results %i - %i of %d Matching Services</div>\n</div>\n",page_start,((page_start+result_limit) > total_entries ? total_entries :(page_start+result_limit) ),total_entries );
 
 	}
 

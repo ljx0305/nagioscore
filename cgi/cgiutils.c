@@ -1613,7 +1613,8 @@ void determine_log_rotation_times(int archive) {
  *************** COMMON HTML FUNCTIONS ********************
  **********************************************************/
 
-void display_info_table(const char *title, int refresh, authdata *current_authdata) {
+void display_info_table2(const char *title, int refresh, authdata *current_authdata, int closeDivs)
+{
 	time_t current_time;
 	char date_time[MAX_DATETIME_LENGTH];
 	int result;
@@ -1621,9 +1622,9 @@ void display_info_table(const char *title, int refresh, authdata *current_authda
 	/* read program status */
 	result = read_all_status_data(status_file, READ_PROGRAM_STATUS);
 
-	printf("<TABLE CLASS='infoBox' BORDER=1 CELLSPACING=0 CELLPADDING=0>\n");
-	printf("<TR><TD CLASS='infoBox'>\n");
+	printf("<DIV CLASS='infoBoxWrap'>\n");
 	printf("<DIV CLASS='infoBoxTitle'>%s</DIV>\n", title);
+	printf("<DIV CLASS='infoBox'>\n");
 
 	time(&current_time);
 	get_time_string(&current_time, date_time, (int)sizeof(date_time), LONG_DATE_TIME);
@@ -1651,12 +1652,17 @@ void display_info_table(const char *title, int refresh, authdata *current_authda
 			printf("<DIV CLASS='infoBoxBadProcStatus'>- Service checks are disabled</DIV>");
 		}
 
-	printf("</TD></TR>\n");
-	printf("</TABLE>\n");
+	/* If FALSE, lets the caller add more to the info box */
+	if (closeDivs)
+		printf("</DIV></DIV>\n");
 
 	return;
 	}
 
+void display_info_table(const char *title, int refresh, authdata *current_authdata)
+{
+	display_info_table2(title, refresh, current_authdata, TRUE);
+}
 
 
 void display_nav_table(char *url, int archive) {
@@ -2053,7 +2059,16 @@ void display_context_help(const char *chid) {
 	if(!strcmp(chid, CONTEXTHELP_TAC))
 		icon = CONTEXT_HELP_ICON2;
 
-	printf("<a href='%s%s.html' target='cshw' onClick='javascript:window.open(\"%s%s.html\",\"cshw\",\"width=550,height=600,toolbar=0,location=0,status=0,resizable=1,scrollbars=1\");return true'><img src='%s%s' border=0 alt='Display context-sensitive help for this screen' title='Display context-sensitive help for this screen'></a>\n", url_context_help_path, chid, url_context_help_path, chid, url_images_path, icon);
+	printf("<DIV CLASS='contextHelp'>\n");
+	printf("<a href='%s%s.html' target='cshw' "
+			"onClick='javascript:window.open(\"%s%s.html\",\"cshw\","
+			"\"width=550,height=600,toolbar=0,location=0,status=0,resizable=1"
+			",scrollbars=1\");"
+			"return true'>"
+			"<img src='%s%s' border=0 alt='Display context-sensitive help for this screen' "
+			"title='Display context-sensitive help for this screen'></a>\n",
+		 url_context_help_path, chid, url_context_help_path, chid, url_images_path, icon);
+	printf("</DIV>\n");
 
 	return;
 	}

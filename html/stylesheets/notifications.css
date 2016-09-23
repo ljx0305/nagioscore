@@ -1,26 +1,31 @@
+/* exfoliation: a nagios makeover                                          */
+/* Copyright 2010 Matthew Wall, all rights reserved                        */
+/*                                                                         */
+/* Permission to use, copy, modify, and distribute this software for any   */
+/* purpose with or without fee is hereby granted, provided that the above  */
+/* copyright notice and this permission notice appear in all copies.       */
 
 .notifications { }
 
-.dataTitle {  text-align: center;  font-weight: bold;  font-size: 12pt; }
+TABLE.notifications { padding: 0; margin: 0; }
+TH.notifications    { font-size: 9pt; text-align: left; padding: 0 3px 0 3px; border-bottom: 1px solid #777777; color: #333333; }
+.notificationsOdd   { font-size: 8pt; background-color: #e7e7e7; padding: 0 4 0 4; }
+.notificationsEven  { font-size: 8pt; background-color: #f4f2f2; padding: 0 4 0 4; }
 
+/* these are dark colors */
+.notificationsOK              { background-color: #88d066; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsUNKNOWN         { background-color: #ffbb55; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsWARNING         { background-color: #ffff00; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsCRITICAL        { background-color: #f88888; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsACKNOWLEDGEMENT { background-color: #aaaaaa; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsCUSTOM          { background-color: #778899; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsDOWNTIME        { background-color: #aaccff; border: 1px solid #777777; padding: 0 4 0 4; }
 
-TABLE.notifications {  font-size: 10pt;  background-color: white;  padding: 5px; border-collapse:separate; }
-TH.notifications {  font-size: 10pt;  text-align: left;  background-color: #999797;   }
-.notificationsOdd {  background-color: #DBDBDB; }
-.notificationsEven {  background-color: #C4C2C2; }
-
-.notificationsOK {  background-color: #33FF00; }
-.notificationsUNKNOWN {  background-color: #FF9900; }
-.notificationsWARNING {  background-color: #FFFF00; }
-.notificationsCRITICAL {  background-color: #F83838; }
-.notificationsACKNOWLEDGEMENT {  background-color: #AAAAAA; }
-.notificationsCUSTOM {  background-color: #778899; }
-.notificationsDOWNTIME {  background-color: #07C7C7; }
-
-.notificationsHOSTUP {  background-color: #33FF00; }
-.notificationsHOSTDOWN {  background-color: #F83838; }
-.notificationsHOSTUNREACHABLE {  background-color: #F83838; }
-.notificationsHOSTACKNOWLEDGEMENT {  background-color: #AAAAAA; }
-.notificationsHOSTCUSTOM {  background-color: #778899; }
-.notificationsHOSTDOWNTIME {  background-color: #07C7C7; }
+/* these are dark colors */
+.notificationsHOSTUP              { background-color: #88d066; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsHOSTDOWN            { background-color: #f88888; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsHOSTUNREACHABLE     { background-color: #ffbb55; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsHOSTACKNOWLEDGEMENT { background-color: #aaaaaa; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsHOSTCUSTOM          { background-color: #778899; border: 1px solid #777777; padding: 0 4 0 4; }
+.notificationsHOSTDOWNTIME        { background-color: #aaccff; border: 1px solid #777777; padding: 0 4 0 4; }
 

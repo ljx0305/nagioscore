@@ -92,6 +92,7 @@ int command_mode = CMDMODE_REQUEST;
 int content_type = HTML_CONTENT;
 
 int display_header = TRUE;
+int has_options = TRUE;
 
 authdata current_authdata;
 
@@ -173,34 +174,32 @@ int main(void) {
 	get_authentication_information(&current_authdata);
 
 	if(display_header == TRUE) {
-
-		/* begin top table */
-		printf("<table border=0 width=100%%>\n");
-		printf("<tr>\n");
-
-		/* left column of the first row */
-		printf("<td align=left valign=top width=33%%>\n");
 		display_info_table("External Command Interface", FALSE, &current_authdata);
-		printf("</td>\n");
+		if(command_mode == CMDMODE_COMMIT)
+			display_context_help(CONTEXTHELP_CMD_COMMIT);
+		else
+			display_context_help(CONTEXTHELP_CMD_INPUT);
+		printf("<br clear=all>\n");
 
-		/* center column of the first row */
-		printf("<td align=center valign=top width=33%%>\n");
-		printf("</td>\n");
-
-		/* right column of the first row */
+/*
 		printf("<td align=right valign=bottom width=33%%>\n");
+*/
 
 		/* display context-sensitive help */
+/*
 		if(command_mode == CMDMODE_COMMIT)
 			display_context_help(CONTEXTHELP_CMD_COMMIT);
 		else
 			display_context_help(CONTEXTHELP_CMD_INPUT);
 
 		printf("</td>\n");
+*/
 
 		/* end of top table */
+/*
 		printf("</tr>\n");
 		printf("</table>\n");
+*/
 		}
 
 	/* authorized_for_read_only should take priority */
@@ -1161,6 +1160,7 @@ void request_command_data(int cmd) {
 		case CMD_START_OBSESSING_OVER_HOST_CHECKS:
 		case CMD_STOP_OBSESSING_OVER_HOST_CHECKS:
 			printf("<tr><td CLASS='optBoxItem' colspan=2>There are no options for this command.<br>Click the 'Commit' button to submit the command.</td></tr>");
+			has_options = FALSE;
 			break;
 
 		case CMD_PROCESS_HOST_CHECK_RESULT:
@@ -1408,8 +1408,11 @@ void request_command_data(int cmd) {
 		}
 
 
-	printf("<tr><td CLASS='optBoxItem' COLSPAN=2></td></tr>\n");
-	printf("<tr><td CLASS='optBoxItem'></td><td CLASS='optBoxItem'><INPUT TYPE='submit' NAME='btnSubmit' VALUE='Commit'> <INPUT TYPE='reset' VALUE='Reset'></td></tr>\n");
+	printf("<tr><td CLASS='optBoxItem' COLSPAN=2>&nbsp;</td></tr>\n");
+	printf("<tr><td CLASS='optBoxItem'></td><td CLASS='optBoxItem'><INPUT TYPE='submit' NAME='btnSubmit' VALUE='Commit'>");
+	if (has_options)
+		printf(" <INPUT TYPE='reset' VALUE='Reset'>");
+	printf("</td></tr>\n");
 
 	printf("</table>\n");
 	printf("</form>\n");
@@ -1430,7 +1433,11 @@ void request_command_data(int cmd) {
 	printf("</div>\n");
 	printf("</p>\n");
 
-	printf("<P><DIV CLASS='infoMessage'>Please enter all required information before committing the command.<br>Required fields are marked in red.<br>Failure to supply all required values will result in an error.</DIV></P>");
+	if (has_options) {
+		printf("<DIV CLASS='infoMessageBox'>");
+		printf("<SPAN CLASS='infoMessage'>Please enter all required information before committing the command.<br>Required fields are marked in red.<br>Failure to supply all required values will result in an error.</SPAN>");
+		printf("</DIV>");
+		}
 
 	return;
 	}
@@ -2334,8 +2341,7 @@ void clean_comment_data(char *buffer) {
 void show_command_help(int cmd) {
 
 	printf("<DIV ALIGN=CENTER CLASS='descriptionTitle'>Command Description</DIV>\n");
-	printf("<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0 CLASS='commandDescription'>\n");
-	printf("<TR><TD CLASS='commandDescription'>\n");
+	printf("<SPAN CLASS='commandDescription'>\n");
 
 	/* decide what information to print out... */
 	switch(cmd) {
@@ -2787,8 +2793,7 @@ void show_command_help(int cmd) {
 			printf("Sorry, but no information is available for this command.");
 		}
 
-	printf("</TD></TR>\n");
-	printf("</TABLE>\n");
+	printf("</SPAN>\n");
 
 	return;
 	}

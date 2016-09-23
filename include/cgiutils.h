@@ -92,7 +92,7 @@ NAGIOS_BEGIN_DECL
 #define SUMMARY_CSS             "summary.css"
 
 	/********************************* JAVASCRIPT INCLUDES **********************/
-#define JQUERY_JS		"jquery-1.7.1.min.js"
+#define JQUERY_JS		"jquery-3.1.0.min.js"
 
 	/********************************* ICONS ************************************/
 
@@ -470,6 +470,7 @@ void print_extra_hostgroup_url(char *, char *);
 void print_extra_servicegroup_url(char *, char *);
 
 void display_info_table(const char *, int, authdata *);
+void display_info_table2(const char *, int, authdata *, int);
 void display_nav_table(char *, int);
 
 void display_splunk_host_url(host *);

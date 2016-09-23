@@ -13,7 +13,10 @@ $this_year = '2016';
 <meta name="ROBOTS" content="NOINDEX, NOFOLLOW" />
 <title>Nagios Core</title>
 <link rel="stylesheet" type="text/css" href="stylesheets/common.css?<?php echo $this_version; ?>" />
-<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheets/splashpage.css?<?php echo $this_version; ?>" />
+<link rel="stylesheet" type="text/css" href="stylesheets/nagjs.css?<?php echo $this_version; ?>" />
+<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+<script type="text/javascript" src="js/nagjs.js?<?php echo $this_version; ?>"></script>
 
 <script type='text/javascript'>
 	$(document).ready(function() {
@@ -121,16 +124,36 @@ $this_year = '2016';
 
 
 <div id="mainbrandsplash">
-	<div id="mainlogo"><a href="https://www.nagios.org/" target="_blank"><img src="images/logofullsize.png" border="0" alt="Nagios" title="Nagios"></a></div>
+	<div id="mainlogo"><a href="https://www.nagios.org/" target="_blank">
+	<!-- img src="images/logo-trans.png" border="0" alt="Nagios" title="Nagios"></a></div -->
+	<img src="images/CoreLogoRed.png" border="0" alt="Nagios" title="Nagios"></a></div>
 	<div><span id="core-status"></span></div>
 </div>
 
 
 <div id="currentversioninfo">
-	<div class="product">Nagios<sup><span style="font-size: small;">&reg;</span></sup> Core<sup><span style="font-size: small;">&trade;</span></sup></div>
-	<div class="version">Version <?php echo $this_version; ?></div>
+	<div class="product">
+		Nagios<sup><span style="font-size: small;">&reg;</span></sup>
+		Core<sup><span style="font-size: small;">&trade;</span></sup>
+		Version <?php echo $this_version; ?>
+	</div>
 	<div class="releasedate">September 06, 2016</div>
-	<div class="checkforupdates"><a href="https://www.nagios.org/checkforupdates/?version=<?php echo $this_version; ?>&amp;product=nagioscore" target="_blank">Check for updates</a></div>
+	<div class="checkforupdates">
+		<a href="https://www.nagios.org/checkforupdates/?version=<?php echo $this_version; ?>&amp;product=nagioscore" target="_blank">
+		Check for updates</a>
+
+
+<!--
+	<a href='#' onClick='Popup = new popup();
+		Popup.centerText(true);
+		Popup.swapClass("popupNormal","popupWarning");
+		Popup.show("Testing <b>1...2...3</b><br>This is a test. This is only a test.",
+		{ x:"400px", y:"200px" }, null, 3000);'><img src='/newnag/images/tacenabled.png' border=0 alt='Flap Detection Enabled' title='Flap Detection Enabled'></a>
+
+		Popup.show("<img class=loading src='../images/loading-wh.gif'>Testing <b>1...2...3</b><br>This is a test. This is only a test.",
+		{ x:"400px", y:"200px" }, null, 3000); -->
+
+	</div>
 </div>
 
 
@@ -221,15 +244,16 @@ $this_year = '2016';
 
 
 <div id="mainfooter">
-	<div id="maincopy">
-		Copyright &copy; 2010-<?php echo $this_year; ?> Nagios Core Development Team and Community Contributors. Copyright &copy; 1999-2009 Ethan Galstad. See the THANKS file for more information on contributors.
+	<div id="maincopy" style='width:800px; margin: auto; margin-bottom:10px;'>
+		Copyright &copy; 2010-<?php echo $this_year; ?> Nagios Core Development Team and Community Contributors. Copyright &copy; 1999-2009 Ethan Galstad.<br>See the THANKS file for more information on contributors.
 	</div>
-	<div CLASS="disclaimer">
+	<div CLASS="disclaimer" style='width:800px;'>
 		Nagios Core is licensed under the GNU General Public License and is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.  Nagios, Nagios Core and the Nagios logo are trademarks, servicemarks, registered trademarks or registered servicemarks owned by Nagios Enterprises, LLC.  Use of the Nagios marks is governed by the <A href="https://www.nagios.com/legal/trademarks/">trademark use restrictions</a>.
 	</div>
 	<div class="logos">
-		<a href="https://www.nagios.org/" target="_blank"><img src="images/weblogo1.png" width="102" height="47" border="0" style="padding: 0 40px 0 40px;" title="Nagios.org" /></a>
-		<a href="http://sourceforge.net/projects/nagios" target="_blank"><img src="images/sflogo.png" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+		<a href="https://www.nagios.org/" target="_blank"><img src="images/weblogo1.png" width="102" height="47" border="0" style="padding: 0 40px 0 0px;" title="Nagios.org" /></a>
+		<a href="http://sourceforge.net/projects/nagios" target="_blank"><img src="images/sflogo.png" width="88" height="31" border="0" style="padding: 0 40px 0 0px;" alt="SourceForge.net Logo" /></a>
+		<a href="https://github.com/NagiosEnterprises/" target="_blank"><img src="images/githublogo.png" border="0" alt="Github Logo" /></a>
 	</div>
 </div> 
 
