@@ -925,6 +925,7 @@ void display_tac_overview(void) {
 	printf("</table>\n");
 #endif
 
+	printf("<DIV CLASS='pageWrap'>\n");
 	display_info_table("Tactical Monitoring Overview", TRUE, &current_authdata);
 
 	printf("<DIV CLASS='perfWrap'>\n");
@@ -985,6 +986,7 @@ void display_tac_overview(void) {
 	printf("</div>\n");
 
 	/* right column */
+/*
 	if(percent_host_health < HEALTH_CRITICAL_PERCENTAGE)
 		strncpy(host_health_image, THERM_CRITICAL_IMAGE, sizeof(host_health_image));
 	else if(percent_host_health < HEALTH_WARNING_PERCENTAGE)
@@ -1000,18 +1002,44 @@ void display_tac_overview(void) {
 	else
 		strncpy(service_health_image, THERM_OK_IMAGE, sizeof(service_health_image));
 	service_health_image[sizeof(service_health_image) - 1] = '\x0';
+*/
+
+	if(percent_host_health < HEALTH_CRITICAL_PERCENTAGE)
+		strcpy(host_health_image, "healthCrit");
+	else if(percent_host_health < HEALTH_WARNING_PERCENTAGE)
+		strcpy(host_health_image, "healthWarn");
+	else
+		strcpy(host_health_image, "healthOk");
+
+	if(percent_service_health < HEALTH_CRITICAL_PERCENTAGE)
+		strcpy(service_health_image, "healthCrit");
+	else if(percent_service_health < HEALTH_WARNING_PERCENTAGE)
+		strcpy(service_health_image, "healthWarn");
+	else
+		strcpy(service_health_image, "healthOk");
 
 	printf("<div class='healthTable'>\n");
 	printf("<div class='healthTitle'>&nbsp;Network Health</div>\n");
 
 	printf("<table border=0 cellspacing=0 cellspadding=0>\n");
-	printf("<tr>\n");
+	printf("<tr class='healthTable'>\n");
+
+/*
 	printf("<td align=left valign=center class='healthItem'>Host Health:</td>");
 	printf("<td valign=top width=100 class='healthBar'><img src='%s%s' border=0 width=%d height=20 alt='%2.1f%% Health' title='%2.1f%% Health'></td>\n", url_images_path, host_health_image, (percent_host_health < 5.0) ? 5 : (int)percent_host_health, percent_host_health, percent_host_health);
 	printf("</tr>\n");
 	printf("<tr><td align=left valign=center class='healthItem'>Service Health:</td>");
 	printf("<td valign=top width=100 class='healthBar'><img src='%s%s' border=0 width=%d height=20 alt='%2.1f%% Health' title='%2.1f%% Health'></td>\n", url_images_path, service_health_image, (percent_service_health < 5.0) ? 5 : (int)percent_service_health, percent_service_health, percent_service_health);
 	printf("</tr>\n");
+*/
+
+	printf("<td align=left valign=center class='healthItem'>Host Health:</td>");
+	printf("<td valign=top width=100 class='healthBar'><div class='%s' alt='%2.1f%% Health' title='%2.1f%% Health'></div></td>\n", host_health_image, percent_host_health, percent_host_health);
+	printf("</tr>\n");
+	printf("<tr><td align=left valign=center class='healthItem'>Service Health:</td>");
+	printf("<td valign=top width=100 class='healthBar'><div class='%s' alt='%2.1f%% Health' title='%2.1f%% Health'></div></td>\n", service_health_image, percent_service_health, percent_service_health);
+	printf("</tr>\n");
+
 	printf("</table>\n");
 
 	printf("</div>\n");
@@ -1425,6 +1453,8 @@ void display_tac_overview(void) {
 	printf("</tr>\n");
 
 	printf("</table>\n");
+
+	printf("</div>\n");
 
 	return;
 	}
