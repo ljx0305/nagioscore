@@ -173,7 +173,7 @@ unsigned long host_properties = 0L;
 unsigned long service_properties = 0L;
 
 
-
+int num_services = 0;
 
 int sort_type = SORT_NONE;
 int sort_option = SORT_HOSTNAME;
@@ -435,6 +435,11 @@ int main(void) {
 		printf("</object>");
 		}
 
+	/* Special case where there is a host with no services */
+	if(display_type == DISPLAY_HOSTS && num_services == 0) {
+		display_type = DISPLAY_HOSTGROUPS;
+		group_style_type = STYLE_HOST_DETAIL;
+	}
 
 	/* bottom portion of screen - service or hostgroup detail */
 	if(display_type == DISPLAY_HOSTS)
@@ -837,6 +842,7 @@ void show_service_status_totals(void) {
 		}
 
 	total_services = total_ok + total_unknown + total_warning + total_critical + total_pending;
+	num_services = total_services;
 	total_problems = total_unknown + total_warning + total_critical;
 
 
@@ -1567,7 +1573,7 @@ void show_service_detail(void) {
 		if(result_limit == 0)
 			limit_results = FALSE;
 
-		if( (limit_results == TRUE && show_service== TRUE)  && ( (total_entries < page_start) || (total_entries >= (page_start + result_limit)) )  ) {
+		if( (limit_results == TRUE && show_service== TRUE)  && ( (total_entries < page_start) || (total_entries > (page_start + result_limit)) )  ) {
 			total_entries++;
 			show_service = FALSE;
 			}
@@ -1888,8 +1894,11 @@ void show_host_detail(void) {
 	int duration_error = FALSE;
 	int total_entries = 0;
 	int visible_entries = 0;
+	regex_t preg_hostname;
 //	int show_host = FALSE;
 
+	if(host_filter != NULL)
+		regcomp(&preg_hostname, host_filter, REG_ICASE);
 
 	/* sort the host list if necessary */
 	if(sort_type != SORT_NONE) {
@@ -2055,6 +2064,14 @@ void show_host_detail(void) {
 		if(is_authorized_for_host(temp_host, &current_authdata) == FALSE)
 			continue;
 
+		if (show_all_hosts == FALSE) {
+			if(host_filter != NULL) {
+				if (regexec(&preg_hostname, temp_host->name, 0, NULL, 0) != 0)
+					continue;
+			} else if (strcmp(host_name, temp_host->name))
+				continue;
+		}
+
 		user_has_seen_something = TRUE;
 
 		/* see if we should display services for hosts with this type of status */
@@ -2083,7 +2100,7 @@ void show_host_detail(void) {
 		if(result_limit == 0)
 			limit_results = FALSE;
 
-		if( (limit_results == TRUE) && ( (total_entries < page_start) || (total_entries >= (page_start + result_limit)) )  ) {
+		if( (limit_results == TRUE) && ( (total_entries < page_start) || (total_entries > (page_start + result_limit)) )  ) {
 			continue;
 			}
 
@@ -5320,19 +5337,22 @@ void create_pagenumbers(int total_entries,char *temp_url,int type_service) {
 
 	int pages = 1;
 	int tmp_start;
-	int i;
+	int i, last_page;
 	int previous_page;
 
 	/* do page numbers if applicable */
 	if(result_limit > 0 && total_entries > result_limit) {
 		pages = (total_entries / result_limit);
+		last_page = pages;
+		if (total_entries % result_limit > 0)
+			++last_page;
 		previous_page = (page_start-result_limit) > 0 ? (page_start-result_limit) : 0;
 		printf("<div id='bottom_page_numbers'>\n");
 		printf("<div class='inner_numbers'>\n");
 		printf("<a href='%s&start=0&limit=%i' class='pagenumber' title='First Page'><img src='%s%s' height='15' width='15' alt='<<' /></a>\n",temp_url,result_limit,url_images_path,FIRST_PAGE_ICON);
 		printf("<a href='%s&start=%i&limit=%i' class='pagenumber' title='Previous Page'><img src='%s%s' height='15' width='10' alt='<' /></a>\n",temp_url,previous_page,result_limit,url_images_path,PREVIOUS_PAGE_ICON);
 
-		for(i = 0; i < (pages + 1); i++) {
+		for(i = 0; i < last_page; i++) {
 			tmp_start = (i * result_limit);
 			if(tmp_start == page_start)
 				printf("<div class='pagenumber current_page'> %i </div>\n",(i+1));

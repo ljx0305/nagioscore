@@ -5,6 +5,13 @@ Nagios Core 4 Change Log
 
 4.2.x - xxxx-xx-xx
 ------------------
+SECURITY FIXES
+* There was a fix to vulnerability CVE-2008-4796 in the 4.2.0 release on
+  August 1, 2016. The fix was apparently incomplete, as there was still a
+  problem. However, we are now getting all RSS feeds using AJAX calls
+  instead of the (outdated) MagpieRSS package. Thanks for bringing this to
+  our attention go to Dawid Golunski (http://legalhackers.com).
+
 FIXES
 * Fix permissions for Host Groups reports (status.cgi) (Patrik Halfar)
 * Service Parents does not appear to be functioning as intended (lev)
@@ -12,6 +19,10 @@ FIXES
 * Remove deprecated "framespacing" (John Frickson)
 * The nagios tarball contains two identical jquery copies (John Frickson)
 * extinfo.cgi does not set content-type (most cgi's don't) (John Frickson)
+* Timeperiods are corrupted by external command CHANGE_SVC_CHECK_TIMEPERIOD (xoubih)
+* Quick search doesn't show hosts without services (service status detail page) (John Frickson)
+* In host/services details view, if exactly 100 entries would not show last one (John Frickson)
+* nagios host URL parameter for NEW map doesn`t work - Network Map for All Hosts (John Frickson)
 
 
 4.2.1 - 2016-09-06
