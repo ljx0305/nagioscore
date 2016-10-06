@@ -27,4 +27,11 @@ td { font:14px sans-seriff; vertical-align:bottom; padding-bottom:5px; }
 		</td></tr>
 	</table>
 </form>
+
+<script>
+if (location.search === "?logoff") {
+	setTimeout("location.replace(location.origin + location.pathname)", 1250);
+}
+</script>
+
 </body></html>
