@@ -332,6 +332,8 @@ void document_footer(void) {
 	if(embedded == TRUE)
 		return;
 
+	print_remote_div(TAC_CGI, NULL);
+
 	/* include user SSI footer */
 	include_ssi_files(TAC_CGI, SSI_FOOTER);
 

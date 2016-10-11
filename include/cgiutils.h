@@ -478,6 +478,7 @@ void display_splunk_service_url(service *);
 void display_splunk_generic_url(char *, int);
 void strip_splunk_query_terms(char *);
 
+void print_remote_div(const char *cgi_name, const char *xtra);
 void include_ssi_files(const char *, int);                            /* include user-defined SSI footers/headers */
 void include_ssi_file(const char *);                                  /* include user-defined SSI footer/header */
 

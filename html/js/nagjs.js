@@ -3,7 +3,7 @@
 * Description: contains objects and functions used in the Nagios(R) Core(SM)
 *              website.
 * Requires:    jquery
-* Contents:    popup, getCookie, post_cmd
+* Contents:    popup, getCookie, post_cmd, remote_content
 * License:     This program is free software; you can redistribute it and/or
 *              modify it under the terms of the GNU General Public License
 *              version 2 as published by the Free Software Foundation.
@@ -242,4 +242,71 @@ post_cmd_error = function(jqXHR, txtStatus, errorThrown)
 			txtStatus + "<br>" + errorThrown;
 	if (this.show)
 		this.show(txt, null, null, 5000);
+}
+
+/* --------------------------------------------------------------------------
+* Object:      remote_content
+* Description: Loads remote content -- help, demos, etc.
+* Usage Sample:
+* --------------------------------------------------------------------------*/
+
+remote_content = function()
+{
+	this.box = null;
+
+	this.box = $("<div/>", {
+		'class':"remoteContent",
+		'id':"remoteContent"
+	});
+	$('body').append(this.box);
+	this.get();
+}
+
+remote_content.prototype.get = function()
+{
+	var text, This = this;
+	$.ajax({
+		type: 'GET',
+		url: "https://www.nagios.org/backend/feeds/frontpage/",
+//			"?page=" + name + "&data=" + data,
+		crossDomain: true,
+		success: function(d, status, jqXHR) {
+			text = This.process(d);
+			if (text) This.box.html(text);
+			This.show(1000);
+		}
+	});
+}
+
+remote_content.prototype.process = function(d)
+{
+	var text = "";
+
+	$(d).find('channel').find('item').each(function(index) {
+		var title = $(this).find('title').text();
+		var txt = $(this).find('description').text();
+		var itemText = title + "<br><ul>" + txt;
+		if (itemText) text += itemText; // Append if non-empty.
+		return index+1 < 2; // Only process n items.
+	});
+
+	return text;
+}
+
+remote_content.prototype.show = function(timeout)
+{
+	var This = this;
+
+	this.box.fadeIn(2000);
+	if (timeout) {
+		window.setTimeout(function(){
+			var a = 0;
+			This.hide();
+		}, 10000);
+	}
+}
+
+remote_content.prototype.hide = function()
+{
+	this.box.fadeOut(2000);
 }

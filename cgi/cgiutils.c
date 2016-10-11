@@ -1833,6 +1833,31 @@ void print_extra_servicegroup_url(char *group_name, char *url) {
 
 
 
+void print_remote_div(const char *cgi_name, const char *xtra)
+{
+	printf("<div class='remoteContent' style='display:none;'></div>\n");
+	printf("<script type='text/javascript'>\n");
+	printf("$.ajax({"
+				"type: 'GET',"
+				"url: 'https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/4/en/distributed.html?page=%s&data=%s',"
+				"crossDomain: true,"
+				"success: function(d, status, jqXHR) {"
+					"var text = ''; // Start with empty text by default."
+					"$(d).find('channel').find('item').each(function(index) {"
+						"var itemText = formatter($(this)); // Format the item's HTML."
+						"if (itemText) text += itemText; // Append if non-empty."
+						"return index+1 < n; // Only process n items."
+					"});"
+					"// Only set the HTML if we have item text."
+					"if (text) $(id).html(prefix + text + suffix);"
+				"}"
+			"});", cgi_name, xtra);
+
+	printf("</script>\n");
+}
+
+
+
 /* include user-defined SSI footers or headers */
 void include_ssi_files(const char *cgi_name, int type) {
 	char common_ssi_file[MAX_INPUT_BUFFER];

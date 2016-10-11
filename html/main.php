@@ -35,6 +35,8 @@ $this_year = '2016';
 			'<ul>', processPromoItem, '</ul>'
 		);
 
+		getRemoteDiv();
+
 		getCoreStatus();
 	});
 
@@ -114,6 +116,10 @@ $this_year = '2016';
 
 	function setCoreStatusHTML(image, text) {
 		$('#core-status').html('<img src="images/' + image + '.gif" /> ' + text);
+	}
+
+	function getRemoteDiv(name, data) {
+		var content = new remote_content();
 	}
 </script>
 

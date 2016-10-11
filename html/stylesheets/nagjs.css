@@ -38,3 +38,14 @@ div.popupWarning {
 }
 
 img.loading { float:left; margin:5px 3px 0; }
+
+div.remoteContent {
+	display:none;
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:300px;
+	border:2px inset black;
+	background:wheat;
+	color:black;
+}
